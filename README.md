@@ -1,11 +1,15 @@
+# README
+
+这只是一个对过程宏的练手项目
+
+做的事情非常简单，就是给结构体自动实现一个merge方法。
+
+```rust
 pub use derive_merge::Merge;
 
 pub trait Merge {
     fn merge(&mut self, another: &Self);
 }
-
-// #[cfg(test)]
-// mod test {
 
 #[derive(Merge)]
 struct TestStruct {
@@ -36,3 +40,10 @@ fn test() {
     assert_eq!(this.c, Some(1));
     assert_eq!(this.d, None);
 }
+```
+
+对结构体中所有类型是Option的字段，
+
+- 如果that的值是Some(T)，那么用它更新this
+- 如果that的值是None，那么不更新this
+- 如果用`#[force]`修饰，那么即使that的值是None，也更新this
