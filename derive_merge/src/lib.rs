@@ -2,6 +2,7 @@ use proc_macro2::TokenStream;
 use quote::{quote, quote_spanned};
 use syn::{spanned::Spanned, Attribute, DeriveInput, Type};
 
+/// 事实上在宏展开的阶段无法获得类型信息
 fn type_is_option(ty: &Type) -> bool {
     match ty {
         Type::Path(type_path) => type_path
@@ -19,12 +20,12 @@ fn have_force_attr(attrs: &[Attribute]) -> bool {
     }
 }
 
-#[proc_macro_derive(Merge, attributes(force, ignor))]
+#[proc_macro_derive(MergeProto, attributes(force))]
 pub fn derive(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
     let input = TokenStream::from(input);
     let DeriveInput { ident, data, .. } = syn::parse2(input).unwrap();
 
-    let merge = match &data {
+    let merge_proto = match &data {
         syn::Data::Struct(message) => match message.fields {
             syn::Fields::Named(ref fileds) => {
                 let recurse = fileds.named.iter().map(|f| {
@@ -54,9 +55,9 @@ pub fn derive(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
     };
 
     let output = quote! {
-        impl Merge for #ident {
-            fn merge (&mut self, another: &Self) {
-                #merge
+        impl MergeProto for #ident {
+            fn merge_proto (&mut self, another: &Self) {
+                #merge_proto
             }
         }
     };
