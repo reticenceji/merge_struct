@@ -11,8 +11,9 @@ pub use derive_merge::MergeProto;
 /// # Example
 ///
 /// ```rust
-/// use byteview_derive_merge_proto::MergeProto;
+/// use derive_merge_struct::MergeProto;
 /// #[derive(MergeProto)]
+/// #[exclude]
 /// struct TestStruct {
 ///     a: Option<i32>,
 ///     b: Option<String>,

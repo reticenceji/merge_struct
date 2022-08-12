@@ -1,5 +1,7 @@
 # README
 
+It's a template to write rust derive macro.
+
 The trait is designed for named struct.
 - If the field of struct has attribute `#[exclude]`, `this.field` remain the same.
 - ElIf the field of struct is not `Option`: `this.field = that.field.clone()`
