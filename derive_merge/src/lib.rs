@@ -1,6 +1,6 @@
 use proc_macro2::TokenStream;
-use quote::{quote, quote_spanned};
-use syn::{spanned::Spanned, Attribute, DeriveInput, Type};
+use quote::quote;
+use syn::{Attribute, DeriveInput, Type};
 
 /// 事实上在宏展开的阶段无法获得类型信息
 fn type_is_option(ty: &Type) -> bool {
@@ -13,14 +13,18 @@ fn type_is_option(ty: &Type) -> bool {
         _ => false,
     }
 }
-fn have_force_attr(attrs: &[Attribute]) -> bool {
+fn has_attr(attrs: &[Attribute], name: &str) -> bool {
     match attrs.get(0) {
-        Some(attr) => attr.path.segments[0].ident.to_string().eq("force"),
+        Some(attr) => attr
+            .path
+            .segments
+            .iter()
+            .any(|path| path.ident.to_string().eq(name)),
         None => false,
     }
 }
 
-#[proc_macro_derive(MergeProto, attributes(force))]
+#[proc_macro_derive(MergeProto, attributes(force, exclude))]
 pub fn derive(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
     let input = TokenStream::from(input);
     let DeriveInput { ident, data, .. } = syn::parse2(input).unwrap();
@@ -33,12 +37,14 @@ pub fn derive(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
                     let ty = &f.ty;
                     let attrs = &f.attrs;
 
-                    if have_force_attr(attrs) || !type_is_option(ty) {
-                        quote_spanned! { f.span() =>
+                    if has_attr(attrs, "exclude") {
+                        quote!()
+                    } else if has_attr(attrs, "force") || !type_is_option(ty) {
+                        quote! {
                             self.#name = another.#name.clone();
                         }
                     } else {
-                        quote_spanned! { f.span() =>
+                        quote! {
                             if another.#name.is_some() {
                                 self.#name = another.#name.clone();
                             }
@@ -53,7 +59,7 @@ pub fn derive(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
         },
         syn::Data::Enum(_) | syn::Data::Union(_) => unimplemented!(),
     };
-
+    println!("{}", merge_proto);
     let output = quote! {
         impl MergeProto for #ident {
             fn merge_proto (&mut self, another: &Self) {
