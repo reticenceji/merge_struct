@@ -32,7 +32,7 @@ fn has_attr(attrs: &[Attribute], name: &str) -> bool {
 // #[proc_macro]: (input: TokenStream) -> TokenStream
 #[proc_macro_derive(MergeProto, attributes(force, exclude))]
 pub fn derive(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
-    // 这里将proc_macro::TokenSteam转化成proc_macro2::TokenStream，因为他可以单元测试。
+    // proc_macro::TokenSteam -> proc_macro2::TokenStream , so we can do unit test.
     let input = TokenStream::from(input);
     // ident: Name of the struct or enum
     // data: Data within the struct or enum.
