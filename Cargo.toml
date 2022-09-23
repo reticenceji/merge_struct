@@ -9,4 +9,4 @@ description = "A derive macro to partially update a named struct"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-derive_merge = { path = "derive_merge" }
+derive_merge = "0.1.0"
