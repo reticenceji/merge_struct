@@ -1,10 +1,11 @@
 [package]
 name = "derive-merge-struct"
-version = "0.2.0"
+version = "0.2.1"
 edition = "2021"
 authors = ["Reticence Ji"]
 license = "MIT"
 description = "A derive macro to partially update a named struct"
+repository = "https://github.com/reticenceji/merge_struct"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
