@@ -1,0 +1,21 @@
+[dependencies.proc-macro2]
+version = "1.0"
+
+[dependencies.quote]
+version = "1.0"
+
+[dependencies.syn]
+features = ["full"]
+version = "2.0"
+
+[lib]
+proc-macro = true
+
+[package]
+authors = ["Reticence Ji"]
+description = "A derive macro to partially update a named struct"
+edition = "2021"
+license = "MIT"
+name = "derive_merge"
+version = "0.2.1"
+repository = "https://github.com/reticenceji/merge_struct"
