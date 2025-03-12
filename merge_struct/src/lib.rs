@@ -53,16 +53,45 @@ pub trait Merge {
     fn merge(&mut self, another: Self);
 }
 
-// #[allow(unused)]
-// #[derive(Merge)]
-// #[exclude]
-// struct TestStruct {
-//     a: Option<i32>,
-//     b: Option<String>,
-//     c: Option<u32>,
-//     #[force]
-//     d: Option<i32>,
-//     #[exclude]
-//     e: Option<i32>,
-//     f: i32,
-// }
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[derive(Merge)]
+    struct TestStruct {
+        a: Option<i32>,
+        b: Option<String>,
+        c: Option<u32>,
+        #[force]
+        d: Option<i32>,
+        #[exclude]
+        e: Option<i32>,
+        f: i32,
+    }
+    #[test]
+    fn test_merge() {
+        let mut this = TestStruct {
+            a: Some(1),
+            b: None,
+            c: Some(1),
+            d: Some(1),
+            e: None,
+            f: 1,
+        };
+        let that = TestStruct {
+            a: Some(2),
+            b: Some("hello".to_string()),
+            c: None,
+            d: None,
+            e: Some(1),
+            f: 2,
+        };
+        this.merge(that);
+        assert_eq!(this.a, Some(2));
+        assert_eq!(this.b, Some("hello".to_string()));
+        assert_eq!(this.c, Some(1));
+        assert_eq!(this.d, None);
+        assert_eq!(this.e, None);
+        assert_eq!(this.f, 2);
+    }
+}

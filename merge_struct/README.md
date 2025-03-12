@@ -1,15 +1,13 @@
 # README
 
-It's a template to write rust derive macro.
-
 The trait is designed for named struct.
+
 - If the field of struct has attribute `#[exclude]`, `this.field` remain the same.
 - ElIf the field of struct is not `Option`: `this.field = that.field.clone()`
 - ElIf the field of struct has attribute `#[force]`: `this.field = that.field.clone()`
 - ElIf the field of struct is `Option` and doesn't have attribute `#[force]`:
-    - If `that.field.is_some()`: `this.field = that.field.clone()`
-    - If `that.field.is_none()`: `this.field` remain the same.
-
+  - If `that.field.is_some()`: `this.field = that.field.clone()`
+  - If `that.field.is_none()`: `this.field` remain the same.
 
 ```rust
 pub trait MergeProto {
